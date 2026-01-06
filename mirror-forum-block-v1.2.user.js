@@ -7,6 +7,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/561585/M%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD%EF%BC%88%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89Mirror%20chromaso%20Forum%20Block%20by%20Username%20%28Final%20Optimized%20Version%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561585/M%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD%EF%BC%88%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89Mirror%20chromaso%20Forum%20Block%20by%20Username%20%28Final%20Optimized%20Version%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -269,7 +271,7 @@
     contentDiv.appendChild(modeBtn);
 
     const refreshBtn = document.createElement('button');
-    refreshBtn.textContent = '立即刷新屏蔽';
+    refreshBtn.textContent = '在更新列表后建议F5手动刷新页面';
     refreshBtn.style.marginBottom = '5px';
     refreshBtn.style.width = '100%';
     refreshBtn.addEventListener('click', () => {

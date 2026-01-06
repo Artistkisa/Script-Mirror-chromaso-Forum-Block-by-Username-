@@ -34,5 +34,8 @@
 - **屏蔽后的楼层效果：**  
   ![屏蔽后的楼层效果](images/pb6.png)
 
+  - **屏蔽引用后效果：**  
+  ![屏蔽后的楼层效果](images/pb7.png)
+
 ## 📜 License
 本项目采用 [MIT License](LICENSE) 开源，允许自由修改和分发。

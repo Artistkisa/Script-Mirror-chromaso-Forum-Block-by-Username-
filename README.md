@@ -18,7 +18,8 @@
    - [Tampermonkey](https://www.tampermonkey.net/)  
    - [Violentmonkey](https://violentmonkey.github.io/)  
 2. 点击安装脚本：  
-   - [GreasyFork 安装页面](https://greasyfork.org/zh-CN/scripts/561585-m%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD-%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D-mirror-chromaso-forum-block-by-username-fixed-version)  
+   - [GreasyFork 安装页面v1.2](https://greasyfork.org/zh-CN/scripts/561585-m%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD-%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D-mirror-chromaso-forum-block-by-username-fixed-version)  
+   - [GreasyFork 安装页面 v2.0pre](https://greasyfork.org/zh-CN/scripts/561604-mirror-forum-block-v2-0-%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD-%E7%94%A8%E6%88%B7%E5%90%8D%E5%B1%8F%E8%94%BD-%E7%BE%8E%E5%8C%96ui)  
 3. 打开论坛页面，即可使用  
 
 ---

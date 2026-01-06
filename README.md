@@ -1,2 +1,26 @@
-# Script-Mirror-chromaso-Forum-Block-by-Username-
-一个黑名单/屏蔽脚本用于 M系镜像论坛
+# Mirror Forum Block by Username (Final Fixed Version)
+
+一个用于 **镜像论坛（mirror.chromaso.net）** 的用户脚本，帮助你屏蔽指定用户的发言与帖子，优化浏览体验。
+
+## ✨ 功能特性
+- 🔒 **屏蔽指定用户**：在用户名旁边显示“屏蔽此人”按钮，一键加入屏蔽名单。
+- 👀 **替换/隐藏模式**：可选择完全隐藏内容，或替换为提示文本。
+- 🎨 **徽章标签**：屏蔽用户会显示“已屏蔽用户”徽章，颜色可自定义。
+- 📌 **浮动面板**：右上角始终可见的管理面板，可折叠，支持模式切换与名单管理。
+- 📑 **屏蔽名单管理**：查看、解除屏蔽用户，支持导入/导出名单，方便跨设备迁移。
+- 📝 **引用屏蔽**：当别人引用被屏蔽用户的内容时，也会自动屏蔽。
+
+## 🛠️ 安装方法
+1. 安装浏览器扩展：
+   - [Tampermonkey](https://www.tampermonkey.net/) 或 [Violentmonkey](https://violentmonkey.github.io/)
+2. 点击安装脚本：
+   - [GreasyFork 安装页面](https://greasyfork.org/zh-CN/scripts/561585-m%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD-%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D-mirror-chromaso-forum-block-by-username-fixed-version)
+3. 打开论坛页面，即可使用。
+
+## 📌 使用说明
+- 在用户名旁边点击“屏蔽此人”即可加入屏蔽名单。
+- 右上角浮动面板可切换模式、调整徽章颜色、管理名单。
+- 导出名单可保存为 JSON，导入时粘贴即可恢复。
+
+## 📜 License
+本项目采用 [MIT License](LICENSE) 开源，允许自由修改和分发。

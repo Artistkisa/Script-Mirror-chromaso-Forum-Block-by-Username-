@@ -1,14 +1,12 @@
 // ==UserScript==
-// @name         M系镜像站扩展-屏蔽功能（通过用户名）Mirror chromaso Forum Block by Username (Fixed Version)
+// @name         M系镜像站扩展-屏蔽功能（通过用户名）Mirror chromaso Forum Block by Username (Final Optimized Version)
 // @namespace    https://mirror.chromaso.net/
-// @version      1.1
-// @description  屏蔽指定用户名的发言与帖子；支持替换/隐藏模式；右上角浮动面板管理名单和模式；徽章标签可自定义颜色；引用块也会屏蔽；导入/导出名单；优化性能
+// @version      1.3
+// @description  屏蔽指定用户名的发言与帖子；支持替换/隐藏模式；右上角浮动面板管理名单和模式；徽章标签可自定义颜色；引用块也会屏蔽；导入/导出名单；性能优化（节流+增量处理）
 // @match        https://mirror.chromaso.net/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561585/M%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD%EF%BC%88%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89Mirror%20chromaso%20Forum%20Block%20by%20Username%20%28Fixed%20Version%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561585/M%E7%B3%BB%E9%95%9C%E5%83%8F%E7%AB%99%E6%89%A9%E5%B1%95-%E5%B1%8F%E8%94%BD%E5%8A%9F%E8%83%BD%EF%BC%88%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89Mirror%20chromaso%20Forum%20Block%20by%20Username%20%28Fixed%20Version%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -67,7 +65,10 @@
   // 楼层处理
   function handlePosts(blockedSet) {
     document.querySelectorAll('.mm-post').forEach((post) => {
-      const nameLink = post.querySelector('.card-header .ui-link');
+      if (post.dataset.blockChecked) return;
+      post.dataset.blockChecked = 'true';
+
+      const nameLink = post.querySelector('.card-header .ui-link[href^="/author/"]');
       const usernameRaw = text(nameLink);
       const username = normalizeName(usernameRaw);
       if (!username) return;
@@ -84,7 +85,7 @@
         addBlockButtonAfter(nameLink, usernameRaw);
       }
 
-      // 处理引用块
+      // 引用块处理
       post.querySelectorAll('blockquote').forEach((quote) => {
         let citedNameRaw = '';
         const citeEl = quote.querySelector('cite');
@@ -113,9 +114,10 @@
     const table = document.querySelector('#thread-table-main');
     if (!table) return;
     table.querySelectorAll('tbody > tr').forEach((row) => {
-      const firstTd = row.querySelector('td.align-middle');
-      if (!firstTd) return;
-      const authorLink = firstTd.querySelector('small > span.d-none.d-sm-inline-block > a.ui-link');
+      if (row.dataset.blockChecked) return;
+      row.dataset.blockChecked = 'true';
+
+      const authorLink = row.querySelector('a[href^="/author/"]');
       const authorNameRaw = text(authorLink);
       const authorName = normalizeName(authorNameRaw);
       if (!authorName) return;
@@ -125,9 +127,9 @@
         if (blockMode === 'hide') {
           row.style.display = 'none';
         } else {
-          const titleLink = firstTd.querySelector('a.ui-link[href^="/thread/"]');
+          const titleLink = row.querySelector('a.ui-link[href^="/thread/"]');
           if (titleLink) titleLink.textContent = '已屏蔽用户的帖子';
-          const small = firstTd.querySelector('small');
+          const small = row.querySelector('small');
           if (small) small.textContent = '';
         }
       } else {
@@ -139,7 +141,10 @@
   // 主题帖详情页顶部
   function handleThreadHeader(blockedSet) {
     document.querySelectorAll('.thread-header, .card.thread-header').forEach((header) => {
-      const nameLink = header.querySelector('.ui-link');
+      if (header.dataset.blockChecked) return;
+      header.dataset.blockChecked = 'true';
+
+      const nameLink = header.querySelector('.ui-link[href^="/author/"]');
       const usernameRaw = text(nameLink);
       const username = normalizeName(usernameRaw);
       if (!username) return;
@@ -165,6 +170,34 @@
     handleThreadHeader(blockedSet);
     handleThreadList(blockedSet);
   }
+
+  // 节流函数
+  function throttle(fn, delay) {
+    let timer = null;
+    return function (...args) {
+      if (!timer) {
+        timer = setTimeout(() => {
+          fn.apply(this, args);
+          timer = null;
+        }, delay);
+      }
+    };
+  }
+
+  // MutationObserver 监听新增节点
+  const observer = new MutationObserver(throttle((mutations) => {
+    const blockedSet = getBlockedSet();
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          if (node.matches('.mm-post')) handlePosts(blockedSet);
+          if (node.matches('tr')) handleThreadList(blockedSet);
+        }
+      });
+    });
+  }, 300));
+
+  observer.observe(document.body, { childList: true, subtree: true });
 
   // 浮动面板
   function createPanel() {
@@ -200,7 +233,6 @@
     updatePanel();
   }
 
-  // 更新面板内容
   function updatePanel() {
     const contentDiv = document.querySelector('#panel-content');
     const toggleBtn = document.querySelector('#block-panel button');
@@ -226,7 +258,6 @@
 
     const modeBtn = document.createElement('button');
     modeBtn.textContent = `切换模式 (当前: ${blockMode})`;
-    
     modeBtn.style.marginBottom = '5px';
     modeBtn.style.width = '100%';
     modeBtn.addEventListener('click', () => {
@@ -236,6 +267,16 @@
       updatePanel();
     });
     contentDiv.appendChild(modeBtn);
+
+    const refreshBtn = document.createElement('button');
+    refreshBtn.textContent = '立即刷新屏蔽';
+    refreshBtn.style.marginBottom = '5px';
+    refreshBtn.style.width = '100%';
+    refreshBtn.addEventListener('click', () => {
+      applyAll();
+      updatePanel();
+    });
+    contentDiv.appendChild(refreshBtn);
 
     const colorLabel = document.createElement('label');
     colorLabel.textContent = '徽章颜色: ';
@@ -300,7 +341,6 @@
       });
     }
 
-    // 导入导出功能
     const exportBtn = document.createElement('button');
     exportBtn.textContent = '导出名单';
     exportBtn.style.marginTop = '8px';
@@ -337,7 +377,7 @@
     contentDiv.appendChild(importBtn);
   }
 
-  // 初次执行（分页站点无需监听）
+  // 初次执行
   applyAll();
   createPanel();
 })();

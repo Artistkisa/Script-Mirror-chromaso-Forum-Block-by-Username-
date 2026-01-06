@@ -1,4 +1,4 @@
-# Mirror Forum Block by Username (Final Fixed Version)
+# Mirror Forum Block by Username ( Fixed Version)-另：2.0pre已更新
 
 一个用于 **M 系镜像论坛（mirror.chromaso.net）** 的用户脚本，帮助你更好地管理浏览体验，彻底屏蔽不想看到的用户发言与帖子。
 

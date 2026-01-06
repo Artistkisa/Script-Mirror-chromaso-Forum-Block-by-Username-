@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         M系镜像站扩展-屏蔽功能（通过用户名）Mirror chromaso Forum Block by Username (Final Optimized Version)
 // @namespace    https://mirror.chromaso.net/
-// @version      1.3
+// @version      1.2
 // @description  屏蔽指定用户名的发言与帖子；支持替换/隐藏模式；右上角浮动面板管理名单和模式；徽章标签可自定义颜色；引用块也会屏蔽；导入/导出名单；性能优化（节流+增量处理）
 // @match        https://mirror.chromaso.net/*
 // @grant        GM_setValue

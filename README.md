@@ -1,4 +1,4 @@
-# Mirror Forum Block Pro (v2.2 深度强化版)
+# Mirror chromaso Forum Block Pro (v2.2 深度强化版)
 
 一个专为 **M 系镜像论坛（mirror.chromaso.net）** 打造的深度屏蔽扩展脚本。不仅能过滤不想看的人，更能守护你的冲浪心情。
 

@@ -51,11 +51,11 @@
 ## 🗺️ 程序逻辑流程图 (System Logic Flow)
 
 脚本核心处理逻辑如下：
-
+ ![核心流程示例](images/float_chartv2.2_1.jpg)
 
 
 冷静期/防手贱心灵保护遮罩流程图：
-
+ ![冷静期流程示例](images/float_chartv2.2_2.jpg)
 
 
 ## 🖼️ 实现效果预览

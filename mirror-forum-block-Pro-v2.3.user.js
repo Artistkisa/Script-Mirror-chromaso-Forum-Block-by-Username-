@@ -3,7 +3,7 @@
 // @namespace    https://mirror.chromaso.net/
 // @version      2.3
 // @description  1.支持深度引用屏蔽；2.支持关键词对标题及标签(Tag)的同步屏蔽；3.新增屏蔽模式切换；4.引入倒计时冷静期及温馨提示，支持一键反悔。
-// @author       Gemini
+// @author       Gemini辅助效率极高
 // @match        https://mirror.chromaso.net/*
 // @grant        GM_setValue
 // @grant        GM_getValue

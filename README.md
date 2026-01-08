@@ -62,6 +62,8 @@
 冷静期/防手贱心灵保护遮罩流程图：
  ![冷静期流程示例](images/float_chartv2.2_2.jpg)
 
+## 📜 项目WIKI
+ [Wiki](https://github.com/Artistkisa/Script-Mirror-chromaso-Forum-Block-by-Username-/wiki/) 
 
 ## 🖼️ 实现效果预览
 

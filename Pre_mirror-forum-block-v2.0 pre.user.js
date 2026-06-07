@@ -12,6 +12,9 @@
 (function () {
   'use strict';
 
+  // --- 0. HTML 转义工具 ---
+  const escapeHtml = (str) => str.replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+
   // --- 1. 数据初始化 ---
   let blockedUsers = GM_getValue('blockedUsers', []);
   let blockedKeywords = GM_getValue('blockedKeywords', []);
@@ -45,7 +48,7 @@
       
       mask.innerHTML = `
         <div style="font-size:14px; margin-bottom:2px;">🚫</div>
-        <div style="color:#666; font-size:11px; font-weight:bold; text-align:center;">内容屏蔽 [${reason}]</div>
+        <div style="color:#666; font-size:11px; font-weight:bold; text-align:center;">内容屏蔽 [${escapeHtml(reason)}]</div>
         <div style="margin-top:4px; color:#007bff; font-size:10px;">点击展开</div>
       `;
 
@@ -58,7 +61,7 @@
 
       if (isTableRow) {
         mask.style.height = '100%'; mask.style.padding = '0 10px';
-        mask.innerHTML = `<span style="color:#999; font-size:12px;">🚫 已屏蔽 [${reason}]</span>`;
+        mask.innerHTML = `<span style="color:#999; font-size:12px;">🚫 已屏蔽 [${escapeHtml(reason)}]</span>`;
       }
       contentArea.appendChild(mask);
     }
@@ -188,7 +191,16 @@
     data.forEach(item => {
         const row = document.createElement('div');
         row.style.cssText = `display:flex; justify-content:space-between; padding:5px 8px; border-bottom:1px solid #f9f9f9;`;
-        row.innerHTML = `<span style="word-break:break-all;">${item}</span><span class="del-item" data-val="${item}" style="color:red; cursor:pointer;">×</span>`;
+        const span = document.createElement('span');
+        span.style.wordBreak = 'break-all';
+        span.textContent = item;
+        const del = document.createElement('span');
+        del.className = 'del-item';
+        del.dataset.val = item;
+        del.style.cssText = 'color:red; cursor:pointer;';
+        del.textContent = '×';
+        row.appendChild(span);
+        row.appendChild(del);
         listWrap.appendChild(row);
     });
 

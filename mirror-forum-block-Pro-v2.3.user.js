@@ -13,6 +13,10 @@
 (function () {
   'use strict';
 
+  // --- 0. HTML 转义工具 ---
+  const HTML_ESCAPE_MAP = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'};
+  const escapeHtml = (value) => String(value ?? '').replace(/[<>&"']/g, c => HTML_ESCAPE_MAP[c]);
+
   // --- 1. 数据初始化 ---
   let blockedUsers = GM_getValue('blockedUsers', []);
   let blockedKeywords = GM_getValue('blockedKeywords', []); // 对应用户要求的“屏蔽词”
@@ -45,13 +49,30 @@
         transition: all 0.2s, opacity 1.5s ease-out; opacity: 1;
       `;
       
-      const iconHtml = `<div class="gm-icon" style="font-size:18px; margin-bottom:5px;">🚫</div>`;
-      const reasonHtml = `<div class="gm-reason" style="color:#666; font-size:11px; font-weight:bold; text-align:center;">内容屏蔽 [${reason}]</div>`;
-      const tipHtml = `<div class="gm-mask-tip" style="margin-top:6px; color:#007bff; font-size:11px; text-align:center;">点击展开</div>`;
+      const iconEl = document.createElement('div');
+      iconEl.className = 'gm-icon';
+      iconEl.style.cssText = 'font-size:18px; margin-bottom:5px;';
+      iconEl.textContent = '🚫';
+      const reasonEl = document.createElement('div');
+      reasonEl.className = 'gm-reason';
+      reasonEl.style.cssText = 'color:#666; font-size:11px; font-weight:bold; text-align:center;';
+      reasonEl.textContent = '内容屏蔽 [' + reason + ']';
+      const tipEl = document.createElement('div');
+      tipEl.className = 'gm-mask-tip';
+      tipEl.style.cssText = 'margin-top:6px; color:#007bff; font-size:11px; text-align:center;';
+      tipEl.textContent = '点击展开';
 
-      mask.innerHTML = isTableRow 
-          ? `<span class="gm-mask-tip" style="color:#999; font-size:12px;">🚫 已屏蔽 [${reason}]</span>`
-          : (iconHtml + reasonHtml + tipHtml);
+      if (isTableRow) {
+          const span = document.createElement('span');
+          span.className = 'gm-mask-tip';
+          span.style.cssText = 'color:#999; font-size:12px;';
+          span.textContent = '🚫 已屏蔽 [' + reason + ']';
+          mask.appendChild(span);
+      } else {
+          mask.appendChild(iconEl);
+          mask.appendChild(reasonEl);
+          mask.appendChild(tipEl);
+      }
 
       if (isTableRow) { mask.style.height = '100%'; mask.style.padding = '0 10px'; }
 
@@ -132,7 +153,12 @@
           mask.style.opacity = '1';
           
           if (isTableRow) {
-               mask.innerHTML = `<span class="gm-mask-tip" style="color:#999; font-size:12px;">🚫 已屏蔽 [${reason}]</span>`;
+               mask.textContent = '';
+               const span = document.createElement('span');
+               span.className = 'gm-mask-tip';
+               span.style.cssText = 'color:#999; font-size:12px;';
+               span.textContent = '🚫 已屏蔽 [' + reason + ']';
+               mask.appendChild(span);
           } else {
                const tipEl = mask.querySelector('.gm-mask-tip');
                const reasonEl = mask.querySelector('.gm-reason');
@@ -284,7 +310,16 @@
     data.forEach(item => {
         const row = document.createElement('div');
         row.style.cssText = `display:flex; justify-content:space-between; padding:5px 8px; border-bottom:1px solid #f9f9f9;`;
-        row.innerHTML = `<span style="word-break:break-all;">${item}</span><span class="del-item" data-val="${item}" style="color:red; cursor:pointer;">×</span>`;
+        const span = document.createElement('span');
+        span.style.wordBreak = 'break-all';
+        span.textContent = item;
+        const del = document.createElement('span');
+        del.className = 'del-item';
+        del.dataset.val = item;
+        del.style.cssText = 'color:red; cursor:pointer;';
+        del.textContent = '×';
+        row.appendChild(span);
+        row.appendChild(del);
         listWrap.appendChild(row);
     });
     con.querySelectorAll('.del-item').forEach(btn => { btn.onclick = () => { const val = btn.dataset.val; if(activeTab === 'user') blockedUsers = blockedUsers.filter(x => x !== val); else blockedKeywords = blockedKeywords.filter(x => x !== val); GM_setValue(activeTab === 'user' ? 'blockedUsers' : 'blockedKeywords', activeTab === 'user' ? blockedUsers : blockedKeywords); updatePanel(); }; });

@@ -12,6 +12,10 @@
 (function () {
   'use strict';
 
+  // --- 0. HTML 转义工具 ---
+  const HTML_ESCAPE_MAP = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'};
+  const escapeHtml = (value) => String(value ?? '').replace(/[<>&"']/g, c => HTML_ESCAPE_MAP[c]);
+
   // --- 1. 数据初始化 ---
   let blockedUsers = GM_getValue('blockedUsers', []);
   let blockedKeywords = GM_getValue('blockedKeywords', []);
@@ -43,11 +47,18 @@
         box-sizing: border-box; min-height: 50px; padding: 5px;
       `;
       
-      mask.innerHTML = `
-        <div style="font-size:14px; margin-bottom:2px;">🚫</div>
-        <div style="color:#666; font-size:11px; font-weight:bold; text-align:center;">内容屏蔽 [${reason}]</div>
-        <div style="margin-top:4px; color:#007bff; font-size:10px;">点击展开</div>
-      `;
+      const iconEl = document.createElement('div');
+      iconEl.style.cssText = 'font-size:14px; margin-bottom:2px;';
+      iconEl.textContent = '🚫';
+      const reasonEl = document.createElement('div');
+      reasonEl.style.cssText = 'color:#666; font-size:11px; font-weight:bold; text-align:center;';
+      reasonEl.textContent = '内容屏蔽 [' + reason + ']';
+      const tipEl = document.createElement('div');
+      tipEl.style.cssText = 'margin-top:4px; color:#007bff; font-size:10px;';
+      tipEl.textContent = '点击展开';
+      mask.appendChild(iconEl);
+      mask.appendChild(reasonEl);
+      mask.appendChild(tipEl);
 
       mask.onclick = (e) => {
         e.preventDefault(); e.stopPropagation();
@@ -58,7 +69,11 @@
 
       if (isTableRow) {
         mask.style.height = '100%'; mask.style.padding = '0 10px';
-        mask.innerHTML = `<span style="color:#999; font-size:12px;">🚫 已屏蔽 [${reason}]</span>`;
+        mask.textContent = '';
+        const span = document.createElement('span');
+        span.style.cssText = 'color:#999; font-size:12px;';
+        span.textContent = '🚫 已屏蔽 [' + reason + ']';
+        mask.appendChild(span);
       }
       contentArea.appendChild(mask);
     }
@@ -188,7 +203,16 @@
     data.forEach(item => {
         const row = document.createElement('div');
         row.style.cssText = `display:flex; justify-content:space-between; padding:5px 8px; border-bottom:1px solid #f9f9f9;`;
-        row.innerHTML = `<span style="word-break:break-all;">${item}</span><span class="del-item" data-val="${item}" style="color:red; cursor:pointer;">×</span>`;
+        const span = document.createElement('span');
+        span.style.wordBreak = 'break-all';
+        span.textContent = item;
+        const del = document.createElement('span');
+        del.className = 'del-item';
+        del.dataset.val = item;
+        del.style.cssText = 'color:red; cursor:pointer;';
+        del.textContent = '×';
+        row.appendChild(span);
+        row.appendChild(del);
         listWrap.appendChild(row);
     });
 

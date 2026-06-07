@@ -13,7 +13,8 @@
   'use strict';
 
   // --- 0. HTML 转义工具 ---
-  const escapeHtml = (str) => str.replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+  const HTML_ESCAPE_MAP = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'};
+  const escapeHtml = (value) => String(value ?? '').replace(/[<>&"']/g, c => HTML_ESCAPE_MAP[c]);
 
   // --- 1. 数据初始化 ---
   let blockedUsers = GM_getValue('blockedUsers', []);
@@ -46,11 +47,18 @@
         box-sizing: border-box; min-height: 50px; padding: 5px;
       `;
       
-      mask.innerHTML = `
-        <div style="font-size:14px; margin-bottom:2px;">🚫</div>
-        <div style="color:#666; font-size:11px; font-weight:bold; text-align:center;">内容屏蔽 [${escapeHtml(reason)}]</div>
-        <div style="margin-top:4px; color:#007bff; font-size:10px;">点击展开</div>
-      `;
+      const iconEl = document.createElement('div');
+      iconEl.style.cssText = 'font-size:14px; margin-bottom:2px;';
+      iconEl.textContent = '🚫';
+      const reasonEl = document.createElement('div');
+      reasonEl.style.cssText = 'color:#666; font-size:11px; font-weight:bold; text-align:center;';
+      reasonEl.textContent = '内容屏蔽 [' + reason + ']';
+      const tipEl = document.createElement('div');
+      tipEl.style.cssText = 'margin-top:4px; color:#007bff; font-size:10px;';
+      tipEl.textContent = '点击展开';
+      mask.appendChild(iconEl);
+      mask.appendChild(reasonEl);
+      mask.appendChild(tipEl);
 
       mask.onclick = (e) => {
         e.preventDefault(); e.stopPropagation();
@@ -61,7 +69,11 @@
 
       if (isTableRow) {
         mask.style.height = '100%'; mask.style.padding = '0 10px';
-        mask.innerHTML = `<span style="color:#999; font-size:12px;">🚫 已屏蔽 [${escapeHtml(reason)}]</span>`;
+        mask.textContent = '';
+        const span = document.createElement('span');
+        span.style.cssText = 'color:#999; font-size:12px;';
+        span.textContent = '🚫 已屏蔽 [' + reason + ']';
+        mask.appendChild(span);
       }
       contentArea.appendChild(mask);
     }

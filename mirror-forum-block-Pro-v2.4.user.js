@@ -30,11 +30,12 @@
   // --- 1b. 预编译关键词正则 ---
   let keywordRegex = null;
   function buildKeywordRegex() {
-    if (blockedKeywords.length === 0) {
+    const valid = blockedKeywords.filter(kw => kw.trim() !== '');
+    if (valid.length === 0) {
       keywordRegex = null;
       return;
     }
-    const escaped = blockedKeywords.map(kw => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const escaped = valid.map(kw => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
     keywordRegex = new RegExp(escaped.join('|'));
   }
   buildKeywordRegex();
@@ -444,7 +445,7 @@
       const val = input.value.trim();
       if(val) {
         if(activeTab === 'user') { if(!blockedUsers.includes(val)) blockedUsers.push(val); }
-        else { if(!blockedKeywords.includes(val)) blockedKeywords.push(val); }
+        else { if(val.trim() && !blockedKeywords.includes(val)) blockedKeywords.push(val); }
         GM_setValue(activeTab === 'user' ? 'blockedUsers' : 'blockedKeywords', activeTab === 'user' ? blockedUsers : blockedKeywords);
         buildKeywordRegex();
         updatePanel();

@@ -12,6 +12,7 @@
 
 (function () {
   'use strict';
+  // v2.4.1 - Added empty keyword guard
 
   // --- 0. HTML 转义工具 ---
   const HTML_ESCAPE_MAP = {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'};
